@@ -60,6 +60,8 @@ function afid (length: number = 8) {
   return picked.join('');
 }
 
+export default (afid as typeof afid & { version: string });
+
 function coinToss (weight = 0.5) {
   const result = Math.random() < weight;
   return result;

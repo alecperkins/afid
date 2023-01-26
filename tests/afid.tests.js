@@ -2,6 +2,11 @@
 const afid = require('../dist/afid');
 
 {
+  It`should expose the version`;
+  assert(Boolean(afid.version), "Missing version");
+}
+
+{
   It`should generate an identifier`;
   const result = afid();
   assert(result.length === 8, "Too short");
