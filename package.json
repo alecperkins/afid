@@ -1,0 +1,27 @@
+{
+  "name": "afid",
+  "version": "0.0.0",
+  "description": "",
+  "author": "Alec Perkins <code@alecperkins.me>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alecperkins/afid/issues"
+  },
+  "homepage": "https://alecperkins.net/afid",
+  "keywords": [],
+  "main": "index.js",
+  "unpkg": "afid.min.js",
+  "private": true,
+  "scripts": {
+    "build-lib": "rm -rf ./build && tsc",
+    "build-dist": "npm run build-lib && node ./scripts/build-dist.js",
+    "package": "npm run build-dist && npm run test && npm pack --dry-run ./dist/afid",
+    "publish": "npm run package && node ./scripts/confirm-publish.js && npm publish ./dist/afid",
+    "postpublish": "cd ./tests/integration/ && npm run test-published",
+    "test": "node ./scripts/test.js"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.4",
+    "uglify-js": "^3.17.4"
+  }
+}
