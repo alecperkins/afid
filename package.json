@@ -1,14 +1,21 @@
 {
   "name": "afid",
   "version": "0.0.0",
-  "description": "",
-  "author": "Alec Perkins <code@alecperkins.me>",
+  "description": "Random identifiers with some affordances for human usage.",
+  "author": "Alec Perkins <mail@alecperkins.me>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/alecperkins/afid/issues"
   },
   "homepage": "https://alecperkins.net/afid",
-  "keywords": [],
+  "keywords": [
+    "id",
+    "identifier",
+    "human-friendly",
+    "verbal",
+    "reading",
+    "key"
+  ],
   "main": "index.js",
   "unpkg": "afid.min.js",
   "private": true,
