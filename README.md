@@ -1,6 +1,7 @@
 
 # afid: AFfordance’d IDentifiers
 
+[![npm package](https://img.shields.io/npm/v/afid)](https://www.npmjs.com/package/afid) [![MIT license](https://img.shields.io/npm/l/afid)](https://github.com/alecperkins/afid/blob/main/LICENSE) [![test status](https://github.com/alecperkins/afid/actions/workflows/node.js.yml/badge.svg)](https://github.com/alecperkins/afid/actions)
 
 `afid()` generates small random strings intended to be used as identifiers that are human friendly, with affordances for reading the identifier in a list or exchanging it verbally. The identifiers are short, omit certain characters that are easily confused, and avoid forming words (no [problem #3,735,928,559](https://3735928559.xyz)).
 
