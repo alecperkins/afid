@@ -10,7 +10,7 @@ const target = require('../dist/afid/package.json');
 
     if (latest_version === target.version) {
         process.stdout.write(`\nLocal and published versions are the same (${ latest_version }).
-Merge the release first!\n`);
+Merge the release first! https://github.com/alecperkins/afid/pulls?q=is:pr+is:open+label:%22autorelease:+pending%22\n`);
         process.exit(1);
     }
 
