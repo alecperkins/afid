@@ -93,6 +93,18 @@ const id = afid(12);
 ```
 
 
+### Set a prefix or suffix
+
+```javascript
+const id = afid({ prefix: "CLIENT-" });
+// id === "CLIENT-9KW42HU2"
+```
+```javascript
+const id = afid({ suffix: "WEB" });
+// id === "G3QT9D2KWEB"
+```
+
+
 ## Author
 
 Alec Perkins, https://alecperkins.net

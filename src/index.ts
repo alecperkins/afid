@@ -1,6 +1,18 @@
+
+export interface AfidOptions {
+  length: number;
+  prefix: string;
+  suffix: string;
+}
+
 // Omits ambiguous characters (I/1/l, O/0, Z for 2, B for 8)
 const LETTERS = "ACDEFGHJKMNPQRTUVWXY";
 const NUMBERS = "2346789";
+const OPTION_DEFAULTS: AfidOptions = {
+  length      : 8,
+  prefix      : "",
+  suffix      : "",
+};
 
 /**
  * Generate a short random identifier with affordances for human usage.
@@ -11,13 +23,33 @@ const NUMBERS = "2346789";
  * The identifiers are not securely generated and are typically short.
  * Do not rely on them being secret or unguessable!
  * 
- * @param length - (8) The character length of the identifier.
+ * @param options.length - (8) The character length of the identifier (excluding the prefix and suffix).
+ * @param options.prefix - ('') A prefix to add to the identifier.
+ * @param options.suffix - ('') A suffix to include to the identifier.
+ * @param length_or_options - The length directly, for convenience.
  * 
  * @returns A random identifier.
  */
-function afid (length: number = 8) {
+function afid (length_or_options?: number | AfidOptions) {
 
-  if (!length || typeof length !== "number" || length < 1) {
+  let raw_options;
+  if (length_or_options !== undefined) {
+    if (typeof length_or_options === "number") {
+      raw_options = {
+        length: length_or_options
+      }
+    } else {
+      raw_options = length_or_options;
+    }
+  } else {
+    raw_options = {};
+  }
+  const _options = {
+    ...OPTION_DEFAULTS,
+    ...raw_options,
+  };
+
+  if (!_options.length || typeof _options.length !== "number" || _options.length < 1) {
     throw new Error("Length must be a positive, non-zero integer");
   }
 
@@ -33,7 +65,7 @@ function afid (length: number = 8) {
   let num_from_set = 0;
   let num_tries = 0;
 
-  while (picked.length < length) {
+  while (picked.length < _options.length) {
     const current_set = charsets[0];
     const next_char = pickRandomChar(current_set);
     // No two of the same in a row
@@ -57,7 +89,7 @@ function afid (length: number = 8) {
     }
   }
 
-  return picked.join('');
+  return `${ _options.prefix }${ picked.join('') }${ _options.suffix }`;
 }
 
 export default (afid as typeof afid & { version: string });
@@ -73,4 +105,3 @@ function pickRandomChar (charset: string) {
   const choice = charset[i];
   return choice;
 }
-

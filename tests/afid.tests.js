@@ -52,6 +52,27 @@ const afid = require('../dist/afid');
   assert(error, "Did not throw for NaN");
 }
 
+
+{
+  It`should allow customizing the length via options`;
+  const result = afid({ length: 14 });
+  assert(result.length === 14, "Too short");
+}
+
+{
+  It`should allow a prefix`;
+  const result = afid({ prefix: 'CLIENT' });
+  assert(result.length === 14, "Too short");
+  assert(/^CLIENT[ACDEFGHJKMNPQRTUVWXY2346789]+$/.test(result), "Invalid characters");
+}
+
+{
+  It`should allow a suffix`;
+  const result = afid({ suffix: 'xyz' });
+  assert(result.length === 11, "Too short");
+  assert(/^[ACDEFGHJKMNPQRTUVWXY2346789]+xyz$/.test(result), "Invalid characters");
+}
+
 {
   It`should throw if it takes too many loops`;
   const realRandom = Math.random;
