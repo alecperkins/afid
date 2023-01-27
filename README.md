@@ -74,30 +74,39 @@ Or use the file directly in markup via the [unpkg CDN](https://unpkg.com/):
 
 ## Usage
 
+### Basic use
+
 Call to get an eight character long identifier.
 
 ```javascript
-const id = afid();
-// id === 'CJ6376A8';
+> afid()
+'CJ6376A8'
 ```
+
+### Vary the length
 
 Optionally specify a different length. _Keep in mind: the number of possible identifiers decreases rapidly as it gets shorter; the usefulness for humans gets worse as it gets longer._
 
 ```javascript
-const id = afid(6);
-// id === '27UV3K';
-```
-```javascript
-const id = afid(12);
-// id === 'K4XH984DE486';
+> afid(12)
+'K4XH984DE486'
+> afid(6)
+'27UV3K'
 ```
 
+Alternatively as part of the options:
+```javascript
+> afid({ length: 6 })
+'MP3696'
+```
 
 ### Set a prefix or suffix
 
 ```javascript
-const id = afid({ prefix: "CLIENT-" });
-// id === "CLIENT-9KW42HU2"
+> afid({ prefix: "CLIENT-" })
+'CLIENT-9KW42HU2'
+> afid({ suffix: "WEB" })
+'G3QT9D2KWEB'
 ```
 ```javascript
 const id = afid({ suffix: "WEB" });
