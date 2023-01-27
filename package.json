@@ -23,8 +23,8 @@
     "build-lib": "rm -rf ./build && tsc",
     "build-dist": "npm run build-lib && node ./scripts/build-dist.js",
     "prepack": "npm run build-dist && npm run test",
-    "inspect-package": "npm pack --dry-run ./dist/afid",
-    "publish-to-npm": "npm run inspect-package && node ./scripts/confirm-publish.js && npm publish ./dist/afid",
+    "inspect-package": "npm run prepack && npm pack --dry-run ./dist/afid",
+    "publish-to-npm": "npm run inspect-package && node ./scripts/confirm-publish.js && npm publish ./dist/afid && npm run postpublish",
     "postpublish": "cd ./tests/integration/ && npm run test-published",
     "test": "node ./scripts/test.js"
   },

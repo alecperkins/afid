@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "pretest-published": "npm install --save afid@latest",
+    "pretest-published": "npm install afid@latest",
     "test-published": "npm run pretest-published && run-p test-published:*",
     "test-published:commonjs": "node ./test-published/commonjs.js",
     "test-published:ecma": "node ./test-published/ecma.mjs",
@@ -8,7 +8,6 @@
     "test-published:browser": "ts-node ./test-published/browser.ts"
   },
   "dependencies": {
-    "afid": "^1.0.0",
     "npm-run-all": "^4.1.5",
     "puppeteer": "^19.6.1",
     "ts-node": "^10.9.1"
