@@ -22,8 +22,9 @@
   "scripts": {
     "build-lib": "rm -rf ./build && tsc",
     "build-dist": "npm run build-lib && node ./scripts/build-dist.js",
-    "package": "npm run build-dist && npm run test && npm pack --dry-run ./dist/afid",
-    "publish": "npm run package && node ./scripts/confirm-publish.js && npm publish ./dist/afid",
+    "prepack": "npm run build-dist && npm run test",
+    "inspect-package": "npm run pack --dry-run ./dist/afid",
+    "publish": "npm run inspect-package && node ./scripts/confirm-publish.js && npm publish ./dist/afid",
     "postpublish": "cd ./tests/integration/ && npm run test-published",
     "release": "npm run package && standard-version",
     "release-minor": "npm run package && standard-version --release-as minor",
