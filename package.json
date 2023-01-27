@@ -24,48 +24,13 @@
     "build-dist": "npm run build-lib && node ./scripts/build-dist.js",
     "prepack": "npm run build-dist && npm run test",
     "inspect-package": "npm run pack --dry-run ./dist/afid",
-    "publish": "npm run inspect-package && node ./scripts/confirm-publish.js && npm publish ./dist/afid",
+    "publish-to-npm": "npm run inspect-package && node ./scripts/confirm-publish.js && npm publish ./dist/afid",
     "postpublish": "cd ./tests/integration/ && npm run test-published",
-    "release": "npm run package && standard-version",
-    "release-minor": "npm run package && standard-version --release-as minor",
-    "release-patch": "npm run package && standard-version --release-as patch",
-    "release-major": "npm run package && standard-version --release-as major",
     "test": "node ./scripts/test.js"
   },
   "devDependencies": {
     "node-fetch": "^3.3.0",
-    "standard-version": "^9.5.0",
     "typescript": "^4.9.4",
     "uglify-js": "^3.17.4"
-  },
-  "standard-version": {
-    "types": [
-      {
-        "type": "feat",
-        "section": "Features"
-      },
-      {
-        "type": "fix",
-        "section": "Bug Fixes"
-      },
-      {
-        "type": "chore",
-        "hidden": true
-      },
-      {
-        "type": "docs",
-        "hidden": true
-      },
-      {
-        "type": "deps",
-        "hidden": true
-      },
-      {
-        "type": "test",
-        "hidden": true
-      }
-    ],
-    "commitUrlFormat": "https://github.com/alecperkins/afid/commits/{{hash}}",
-    "compareUrlFormat": "https://github.com/alecperkins/afid/compare/{{previousTag}}...{{currentTag}}"
   }
 }

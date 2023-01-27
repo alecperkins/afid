@@ -10,7 +10,7 @@ const target = require('../dist/afid/package.json');
 
     if (latest_version === target.version) {
         process.stdout.write(`\nLocal and published versions are the same (${ latest_version }).
-Run \`npm run release-[major,minor,patch]\` first!\n`);
+Merge the release first!\n`);
         process.exit(1);
     }
 
