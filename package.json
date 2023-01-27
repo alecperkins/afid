@@ -1,6 +1,6 @@
 {
   "name": "afid",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Random identifiers with some affordances for human usage.",
   "author": "Alec Perkins <mail@alecperkins.me>",
   "license": "MIT",
