@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/alecperkins/afid/compare/v1.1.0...v1.2.0) (2023-01-27)
+
+
+### Features
+
+* Option to group characters into segments ([964625a](https://github.com/alecperkins/afid/commit/964625a415adf84b1298532e7d2e49bb55363224))
+
 ## [1.1.0](https://github.com/alecperkins/afid/compare/v1.0.0...v1.1.0) (2023-01-27)
 
 
