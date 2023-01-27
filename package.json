@@ -1,6 +1,6 @@
 {
   "name": "afid",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Random identifiers with some affordances for human usage.",
   "author": "Alec Perkins <mail@alecperkins.me>",
   "license": "MIT",
@@ -39,12 +39,30 @@
   },
   "standard-version": {
     "types": [
-      {"type": "feat", "section": "Features"},
-      {"type": "fix", "section": "Bug Fixes"},
-      {"type": "chore", "hidden": true},
-      {"type": "docs", "hidden": true},
-      {"type": "deps", "hidden": true},
-      {"type": "test", "hidden": true}
+      {
+        "type": "feat",
+        "section": "Features"
+      },
+      {
+        "type": "fix",
+        "section": "Bug Fixes"
+      },
+      {
+        "type": "chore",
+        "hidden": true
+      },
+      {
+        "type": "docs",
+        "hidden": true
+      },
+      {
+        "type": "deps",
+        "hidden": true
+      },
+      {
+        "type": "test",
+        "hidden": true
+      }
     ],
     "commitUrlFormat": "https://github.com/alecperkins/afid/commits/{{hash}}",
     "compareUrlFormat": "https://github.com/alecperkins/afid/compare/{{previousTag}}...{{currentTag}}"
