@@ -74,6 +74,42 @@ const afid = require('../dist/afid');
 }
 
 {
+  It`should allow forcing start with a letter`;
+  let fail = false;
+  for (let i = 0; i < 100; i++) {
+    const result = afid({ start: "letter" });
+    fail = !/^[ACDEFGHJKMNPQRTUVWXY]{1}/.test(result);
+    if (fail) {
+      break;
+    }
+  }
+  assert(!fail, "Wrong starting character type");
+}
+{
+  It`should allow forcing start with a number`;
+  let fail = false;
+  for (let i = 0; i < 100; i++) {
+    const result = afid({ start: "number" });
+    fail = !/^[2346789]{1}/.test(result);
+    if (fail) {
+      break;
+    }
+  }
+  assert(!fail, "Wrong starting character type");
+}
+{
+  It`should throw if unknown start type`;
+  let error;
+  try {
+    afid({ start: "any" });
+  } catch (e) {
+    error = e;
+  }
+  assert(error, "Did not throw for wrong type");
+}
+
+
+{
   It`should throw if it takes too many loops`;
   const realRandom = Math.random;
   Math.random = () => 4;

@@ -1,6 +1,7 @@
 
 export interface AfidOptions {
   length: number;
+  start: "random" | "letter" | "number";
   prefix: string;
   suffix: string;
 }
@@ -10,6 +11,7 @@ const LETTERS = "ACDEFGHJKMNPQRTUVWXY";
 const NUMBERS = "2346789";
 const OPTION_DEFAULTS: AfidOptions = {
   length      : 8,
+  start       : "random",
   prefix      : "",
   suffix      : "",
 };
@@ -24,6 +26,7 @@ const OPTION_DEFAULTS: AfidOptions = {
  * Do not rely on them being secret or unguessable!
  * 
  * @param options.length - (8) The character length of the identifier (excluding the prefix and suffix).
+ * @param options.start - ('random') Whether the identifier should start with a 'letter', 'number', or randomly either.
  * @param options.prefix - ('') A prefix to add to the identifier.
  * @param options.suffix - ('') A suffix to include to the identifier.
  * @param length_or_options - The length directly, for convenience.
@@ -56,7 +59,13 @@ function afid (length_or_options?: number | AfidOptions) {
   const picked: Array<string> = [];
 
   let charsets: [string, string];
-  if (coinToss()) {
+  if (_options.start === "letter") {
+    charsets = [LETTERS, NUMBERS];
+  } else if (_options.start === "number") {
+    charsets = [NUMBERS, LETTERS];
+  } else if (_options.start && _options.start !== "random") {
+    throw new Error("Unknown options.start type");
+  } else if (coinToss()) {
     charsets = [NUMBERS, LETTERS];
   } else {
     charsets = [LETTERS, NUMBERS];

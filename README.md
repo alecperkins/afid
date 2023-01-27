@@ -105,6 +105,16 @@ const id = afid({ suffix: "WEB" });
 ```
 
 
+### Force the starting character type
+
+```javascript
+> afid({ start: "letter" })
+'UX292EC7'
+> afid({ start: "number" })
+'4HX4972J'
+```
+
+
 ## Author
 
 Alec Perkins, https://alecperkins.net
