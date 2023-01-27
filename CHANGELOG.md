@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/alecperkins/afid/compare/v1.0.0...v1.1.0) (2023-01-27)
+
+
+### Features
+
+* Option to force start character type ([0689c98](https://github.com/alecperkins/afid/commit/0689c9822dab0cbc92780247a9f26bf22fb2096c))
+* Support for prefixes and suffixes ([e2d24b0](https://github.com/alecperkins/afid/commit/e2d24b0418cbbebaa06424af2badebffe75b30d8))
+
 ## 1.0.0 (2023-01-27)
 
 
