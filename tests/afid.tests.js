@@ -85,6 +85,7 @@ const afid = require('../dist/afid');
   }
   assert(!fail, "Wrong starting character type");
 }
+
 {
   It`should allow forcing start with a number`;
   let fail = false;
@@ -97,6 +98,7 @@ const afid = require('../dist/afid');
   }
   assert(!fail, "Wrong starting character type");
 }
+
 {
   It`should throw if unknown start type`;
   let error;
@@ -108,6 +110,84 @@ const afid = require('../dist/afid');
   assert(error, "Did not throw for wrong type");
 }
 
+{
+  It`should throw if unknown start type`;
+  let error;
+  try {
+    afid({ start: "any" });
+  } catch (e) {
+    error = e;
+  }
+  assert(error, "Did not throw for wrong type");
+}
+
+{
+  It`should segment`;
+  const result = afid({ segments: 2 });
+  assert(result.length === 9, "Wrong length");
+  assert(/^[ACDEFGHJKMNPQRTUVWXY2346789]{4}-[ACDEFGHJKMNPQRTUVWXY2346789]{4}$/.test(result), "Invalid characters or format");
+}
+
+{
+  It`should throw for zero segments`;
+  let error;
+  try {
+    afid({ segments: 0 });
+  } catch (e) {
+    error = e;
+  }
+  assert(error, "Did not throw for 0");
+}
+
+{
+  It`should throw for negative segments`;
+  let error;
+  try {
+    afid({ segments: 0 });
+  } catch (e) {
+    error = e;
+  }
+  assert(error, "Did not throw for 0");
+}
+
+{
+  It`should throw for NaN segments`;
+  let error;
+  try {
+    afid({ segments: "asdf" });
+  } catch (e) {
+    error = e;
+  }
+  assert(error, "Did not throw for NaN");
+}
+
+{
+  It`should segment different lengths`;
+  const result = afid({ segments: 4, length: 16 });
+  assert(result.length === 19, "Wrong length");
+  assert(/^[ACDEFGHJKMNPQRTUVWXY2346789]{4}-[ACDEFGHJKMNPQRTUVWXY2346789]{4}-[ACDEFGHJKMNPQRTUVWXY2346789]{4}-[ACDEFGHJKMNPQRTUVWXY2346789]{4}$/.test(result), "Invalid characters or format");
+}
+
+{
+  It`should segment odd lengths`;
+  const result = afid({ segments: 2, length: 7 });
+  assert(result.length === 8, "Wrong length");
+  assert(/^[ACDEFGHJKMNPQRTUVWXY2346789]{4}-[ACDEFGHJKMNPQRTUVWXY2346789]{3}$/.test(result), "Invalid characters or format");
+}
+
+{
+  It`should allow a custom separator`;
+  const result = afid({ segments: 2, separator: "__" });
+  assert(result.length === 10, "Wrong length");
+  assert(/^[ACDEFGHJKMNPQRTUVWXY2346789]{4}__[ACDEFGHJKMNPQRTUVWXY2346789]{4}$/.test(result), "Invalid characters or format");
+}
+
+{
+  It`should not use the separator with prefixes and suffixes when segmenting`;
+  const result = afid({ segments: 2, prefix: "ACME-", suffix: "-2023", separator: "_" });
+  assert(result.length === 19, "Wrong length");
+  assert(/^ACME-[ACDEFGHJKMNPQRTUVWXY2346789]{4}_[ACDEFGHJKMNPQRTUVWXY2346789]{4}-2023$/.test(result), "Invalid characters or format");
+}
 
 {
   It`should throw if it takes too many loops`;

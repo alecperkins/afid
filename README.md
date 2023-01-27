@@ -29,9 +29,18 @@ GM932AE2
 46RF3DR434R
 AK26VG8V8469
 H7489DU4786V
-2DQ8484X24JG
 PW2324HW3937FX8A9K8NK32T
 3464HM9473WR8794XK2829GN
+```
+
+The ids can have some enhancements:
+
+```
+9874-DA89
+U49-47V-G49
+4347.ED37.2HR8.429Q
+PRE-86XG89QJ
+9492W427-POST
 ```
 
 ### Afid Characteristics
@@ -42,7 +51,8 @@ PW2324HW3937FX8A9K8NK32T
 - never has more than two letters or four numbers in a row
   - avoids forming words
   - uses the letters to punctuate the number groups
-- encodes no information
+- encodes no information in the body of the id
+- characters can be grouped for easier reading
 
 
 ## Installation
@@ -108,19 +118,28 @@ Alternatively as part of the options:
 > afid({ suffix: "WEB" })
 'G3QT9D2KWEB'
 ```
+
+### Segment the id
+
 ```javascript
-const id = afid({ suffix: "WEB" });
-// id === "G3QT9D2KWEB"
+> afid({ segments: 2 })
+'RA24-64UK'
 ```
 
-
-### Force the starting character type
+Optionally change the delimiter:
 
 ```javascript
-> afid({ start: "letter" })
-'UX292EC7'
-> afid({ start: "number" })
-'4HX4972J'
+> afid({ segments: 2, separator: "_" })
+'2848_Y968'
+```
+
+Combine with the other options:
+
+```javascript
+> afid({ segments: 2, prefix: "WEB-" })
+'WEB-CH36-F4MU'
+> afid({ segments: 3, length: 9, suffix: "-WEB", separator: "." })
+'NJ2.893.WH6-WEB'
 ```
 
 
