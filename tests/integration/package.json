@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "pretest-published": "npm install afid@latest",
+    "pretest-published": "npm install --no-save afid@latest",
     "test-published": "npm run pretest-published && run-p test-published:*",
     "test-published:commonjs": "node ./test-published/commonjs.js",
     "test-published:ecma": "node ./test-published/ecma.mjs",
