@@ -1,0 +1,13 @@
+<body>
+  <script src="https://unpkg.com/afid"></script>
+  <script>
+    const id_el = document.createElement('span');
+    id_el.id = 'result';
+    id_el.textContent = window.afid();
+    document.body.append(id_el);
+    const version_el = document.createElement('span');
+    version_el.id = 'version';
+    version_el.textContent = window.afid.version;
+    document.body.append(version_el);
+  </script>
+</body>
