@@ -7,6 +7,10 @@
   "bugs": {
     "url": "https://github.com/alecperkins/afid/issues"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alecperkins/afid.git"
+  },
   "homepage": "https://alecperkins.net/afid",
   "keywords": [
     "id",
