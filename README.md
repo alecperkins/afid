@@ -84,6 +84,9 @@ Or use the file directly in markup via the [unpkg CDN](https://unpkg.com/):
 
 ## Usage
 
+Try an [interactive example](https://alecperkins.net/afid)
+or [live code](https://runkit.com/embed/4y1qvehpspvc).
+
 ### Basic use
 
 Call to get an eight character long identifier.
