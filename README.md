@@ -1,13 +1,13 @@
 
 # afid: AFfordance’d IDentifiers
 
-[![npm package](https://img.shields.io/npm/v/afid)](https://www.npmjs.com/package/afid) [![MIT license](https://img.shields.io/npm/l/afid)](https://github.com/alecperkins/afid/blob/main/LICENSE) [![test status](https://github.com/alecperkins/afid/actions/workflows/test.yml/badge.svg)](https://github.com/alecperkins/afid/actions/workflows/test.yml)
+[![npm package](https://img.shields.io/npm/v/afid)](https://www.npmjs.com/package/afid) [![typescript](https://img.shields.io/npm/types/afid)]() [![MIT license](https://img.shields.io/npm/l/afid)](https://github.com/alecperkins/afid/blob/main/LICENSE) [![test status](https://github.com/alecperkins/afid/actions/workflows/test.yml/badge.svg)](https://github.com/alecperkins/afid/actions/workflows/test.yml)
 
 `afid()` generates small random strings intended to be used as identifiers that are human friendly, with affordances for reading the identifier in a list or exchanging it verbally. The identifiers are short, omit certain characters that are easily confused, and avoid forming words (no [problem #3,735,928,559](https://3735928559.xyz)).
 
-They are useful for situations that typically use sequential numbers but in scenarios where that is not desired. Use cases include: invoice numbers that don’t reveal the count of invoices; transaction reference keys. They are especially helpful for sets that, when sorted by this identifier, benefit from visual distinction and quick random access. At the default length, the number of possible ids is well into the billions. This is suitable for many usecases but not for large or distributed data sets.
+They are useful for situations that typically use sequential numbers but in scenarios where that is not desired. Use cases include: invoice numbers that don’t reveal the count of invoices; transaction reference keys. They are especially helpful for sets that, when sorted by this identifier, benefit from visual distinction and quick random access; ie at smaller scales each id will quickly and significantly differ from its neighbors when sorted. At the default length, the number of possible ids is well into the billions. This is suitable for many usecases but not for large or distributed data sets.
 
-Note: `afid` does not use a secure random generator, and the identifiers are intentionally very short. Do not assume they are globally unique or unguessable! Also note that they are not lexigraphically sortable.
+> Note: `afid` does not use a secure random generator, and the identifiers are intentionally very short. Do not assume they are globally unique or unguessable! Also note that they are not lexigraphically sortable. See [Alternatives](#alternatives) below for other options if your priorities differ.
 
 
 ## Afid anatomy
@@ -144,6 +144,11 @@ Combine with the other options:
 > afid({ segments: 3, length: 9, suffix: "-WEB", separator: "." })
 'NJ2.893.WH6-WEB'
 ```
+
+
+## Alternatives
+
+There are many great [ID generation schemes](https://github.com/grantcarthew/awesome-unique-id) with different priorization of security or uniqueness.
 
 
 ## Author
