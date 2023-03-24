@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.1](https://github.com/alecperkins/afid/compare/v1.2.0...v1.2.1) (2023-03-24)
+
+
+### Bug Fixes
+
+* Make optional options actually optional in the types ([c56ebc4](https://github.com/alecperkins/afid/commit/c56ebc4632a933bd549f5d4beace7395de03e4e1))
+
 ## [1.2.0](https://github.com/alecperkins/afid/compare/v1.1.0...v1.2.0) (2023-01-27)
 
 
