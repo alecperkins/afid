@@ -1,11 +1,11 @@
 
 export interface AfidOptions {
-  length: number;
-  start: "random" | "letter" | "number";
-  prefix: string;
-  suffix: string;
-  segments: number;
-  separator: string;
+  length?: number;
+  start?: "random" | "letter" | "number";
+  prefix?: string;
+  suffix?: string;
+  segments?: number;
+  separator?: string;
 }
 
 // Omits ambiguous characters (I/1/l, O/0, Z for 2, B for 8)
