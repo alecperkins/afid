@@ -24,11 +24,11 @@ const OPTION_DEFAULTS: AfidOptions = {
  * Generate a short random identifier with affordances for human usage.
  * Omits ambiguous characters and avoids forming words or too many
  * sequences of one type of character.
- * 
+ *
  * @remarks
  * The identifiers are not securely generated and are typically short.
  * Do not rely on them being secret or unguessable!
- * 
+ *
  * @param options.length - (8) The number of random characters in the identifier (excluding prefix, suffix, separators).
  * @param options.start - ('random') Whether the identifier should start with a letter, number, or randomly either.
  * @param options.prefix - ('') A prefix to add to the identifier.
@@ -36,7 +36,7 @@ const OPTION_DEFAULTS: AfidOptions = {
  * @param options.segments - (1) The number of groupings of characters, delimited by `options.separator` (excludes prefix/suffix).
  * @param options.separator - ('-') The character to separate segments with (excludes prefix/suffix).
  * @param length_or_options - The length directly, for convenience.
- * 
+ *
  * @returns A random identifier.
  */
 function afid (length_or_options?: number | AfidOptions) {
@@ -85,12 +85,47 @@ function afid (length_or_options?: number | AfidOptions) {
   const picked: Array<string> = [];
   let num_picked = 0;
   let prev_picked = '';
+  let is_exponent_safe = true;
+  let num_es = 0;
+  let num_letters = 0;
 
   const segment_max_size = Math.ceil(_options.length / _options.segments);
 
   while (num_picked < _options.length) {
     const current_set = charsets[0];
     const next_char = pickRandomChar(current_set);
+    // Track how many Es and non-E letters have been used so we can ensure
+    // the output does not resemble exponential notation.
+    if (
+      (
+        // This only really matters for unsegmented ids.
+        _options.segments < 2
+        || (
+          _options.segments < 3
+          && _options.separator !== '.'
+        )
+      ) && current_set === LETTERS
+    ) {
+      num_letters += 1;
+      if (next_char === "E") {
+        num_es += 1;
+        if (num_es > 1) {
+          is_exponent_safe = true;
+        } else if (
+          num_letters < 2 // Only one E
+          && num_picked > 1 // Not the first
+          && num_picked < _options.length - 1 // Not the last
+        ) {
+          // If there is an E that is the only letter
+          // and isn't in the first or last position,
+          // consider the in-progress identifier as
+          // resembling an exponent.
+          is_exponent_safe = false;
+        }
+      } else if (!is_exponent_safe) {
+        is_exponent_safe = true;
+      }
+    }
 
     // No two of the same in a row
     if (next_char !== prev_picked) {
@@ -107,11 +142,21 @@ function afid (length_or_options?: number | AfidOptions) {
         segment = [];
       }
 
-      // No more than 2 letters or 4 numbers in a row to avoid forming words
+      // No more than 2 letters in a row to avoid forming words,
+      // no more than 4 numbers in a row for easier memorization or conveyance
+      // (the letters punctuate the number groups).
       if (
         (current_set === LETTERS && num_from_set === 2)
         || (current_set === NUMBERS && num_from_set === 4)
-        || coinToss(0.25)
+        || (
+          (
+            // If the ID is not yet exponent safe, increasingly favor letters.
+            !is_exponent_safe
+            && current_set === NUMBERS
+            && coinToss((num_picked + 1) / _options.length) // This will approach and reach 1 by the end, forcing a second letter by the end if not exponent safe yet.
+          )
+          || coinToss(0.25)
+        )
        ) {
         num_from_set = 0;
         charsets.push(charsets.shift()!);

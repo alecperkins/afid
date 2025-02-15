@@ -53,7 +53,7 @@ PRE-86XG89QJ
   - uses the letters to punctuate the number groups
 - encodes no information in the body of the id
 - characters can be grouped for easier reading
-
+- problematic patterns like exponential notation are avoided
 
 ## Installation
 

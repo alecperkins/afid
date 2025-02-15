@@ -203,3 +203,134 @@ const afid = require('../dist/afid');
   assert(!result && error, "Did not throw");
   Math.random = realRandom;
 }
+
+{
+  It`should avoid creating exponential notation through forcing another letter by the end`;
+  const realRandom = Math.random;
+  // Return a specific sequences of "random" values
+  // to ensure a stable result and test it makes the exact
+  // expected calls to Math.random.
+  const nums = [
+    0,    // -> numbers
+    0/7,  // 2
+          // -> stay on numbers (skip exponent check since no E yet)
+    0.9,  // -> stay on numbers (coin toss)
+    1/7,  // 3
+    0,    // -> letters
+    3/20, // E
+    0,    // -> numbers
+    1/7,  // 3
+    0.9,  // -> stay on numbers (exponent check)
+    0.9,  // -> stay on numbers (coin toss)
+    2/7,  // 4
+    0.9,  // -> stay on numbers (exponent check)
+    0.9,  // -> stay on numbers (coin toss)
+    3/7,  // 6
+    0.9,  // -> letters (try stay on numbers but exponent check forces weight to 1)
+    2/20, // D
+  ];
+  Math.random = () => {
+    const n = nums.shift();
+    return n;
+  };
+  const result = afid(7);
+  assert("23E346D" === result, `Unexpected result: ${ result }`);
+  Math.random = realRandom;
+}
+
+{
+  It`should detect when exponent safe due to non-E`;
+  const realRandom = Math.random;
+  // Return a specific sequences of "random" values
+  // to ensure a stable result and test it makes the exact
+  // expected calls to Math.random.
+  const nums = [
+    0,    // -> numbers
+    0/7,  // 2
+          // -> stay on numbers (skip exponent check since no E yet)
+    0.9,  // -> stay on numbers (coin toss)
+    1/7,  // 3
+    0,    // -> letters
+    5/20, // G (flips is_exponent_safe)
+    0,    // -> numbers
+    1/7,  // 3
+          // -> stay on numbers (skip exponent check since non-E)
+    0.9,  // -> stay on numbers (coin toss)
+    2/7,  // 4
+          // -> stay on numbers (skip exponent check)
+    0.9,  // -> stay on numbers (coin toss)
+    3/7,  // 6
+          // -> stay on numbers (skip exponent check)
+    0.9,  // -> stay on numbers (coin toss)
+    2/7,  // 4
+  ];
+  Math.random = () => {
+    const n = nums.shift();
+    return n;
+  };
+  const result = afid(7);
+  assert("23G3464" === result, `Unexpected result: ${ result }`);
+  Math.random = realRandom;
+}
+
+{
+  It`should detect when exponent safe due to multiple Es`;
+  const realRandom = Math.random;
+  // Return a specific sequences of "random" values
+  // to ensure a stable result and test it makes the exact
+  // expected calls to Math.random.
+  const nums = [
+    0,    // -> numbers
+    0/7,  // 2
+    0,    // -> letters (coin toss)
+    3/20, // E
+    0,    // -> numbers
+    1/7,  // 3
+    0,    // -> letters
+    3/20,  // E
+    0,    // -> numbers
+    2/7,  // 4
+          // -> skip exponent check
+    0.9,  // -> stay on numbers (coin toss)
+    3/7,  // 6
+          // -> skip exponent check
+    0.9,  // -> stay on numbers (coin toss)
+    2/7,  // 4
+  ];
+  Math.random = () => {
+    const n = nums.shift();
+    return n;
+  };
+  const result = afid(7);
+  assert("2E3E464" === result, `Unexpected result: ${ result }`);
+  Math.random = realRandom;
+}
+
+{
+  It`should detect when exponent safe due to first-position E`;
+  const realRandom = Math.random;
+  // Return a specific sequences of "random" values
+  // to ensure a stable result and test it makes the exact
+  // expected calls to Math.random.
+  const nums = [
+    0.9,  // -> letters
+    3/20, // E
+    0,    // -> numbers (coin toss)
+    0/7,  // 2
+    0.9,  // -> numbers
+    1/7,  // 3
+    0.9,  // -> numbers
+    0/7,  // 2
+    0.9,  // -> still numbers (no exponent check)
+    1/7,  // 3
+  ];
+  Math.random = () => {
+    const n = nums.shift();
+    return n;
+  };
+  const result = afid(5); // Shorten to 5 to avoid the from-set limit
+  assert("E2323" === result, `Unexpected result: ${ result }`);
+  Math.random = realRandom;
+}
+
+
