@@ -334,3 +334,21 @@ const afid = require('../dist/afid');
 }
 
 
+{
+  It`should take a reasonable time to generate an identifier`;
+  const { hrtime } = require("node:process");
+  const durations = [];
+  function run () {
+    const start = hrtime.bigint();
+    afid();
+    const end = hrtime.bigint();
+    durations.push(end - start);
+  }
+
+  for (let i = 0; i < 10000; i++) {
+    run();
+  }
+  const avg = durations.reduce((t,v) => t + v) / BigInt(durations.length);
+  assert(avg < BigInt(10_000), `Average execution exceeded 10k nanoseconds: ${ avg }`);
+}
+
