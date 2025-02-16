@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/alecperkins/afid/compare/v1.2.1...v1.3.0) (2025-02-16)
+
+
+### Features
+
+* Avoid creating exponential notation ([9635fff](https://github.com/alecperkins/afid/commit/9635fff5110e9530a62e2a7a79d11d98bc067122))
+
 ## [1.2.1](https://github.com/alecperkins/afid/compare/v1.2.0...v1.2.1) (2023-03-24)
 
 
