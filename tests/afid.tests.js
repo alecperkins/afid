@@ -9,10 +9,10 @@ const afid = require('../dist/afid');
 {
   It`should generate an identifier`;
   const result = afid();
-  assert(result.length === 8, "Too short");
-  assert(/^[ACDEFGHJKMNPQRTUVWXY2346789]+$/.test(result), "Invalid characters");
-  assert(!/[A-Z]{3}/.test(result), "Too many sequential letters");
-  assert(!/\d{5}/.test(result), "Too many sequential numbers");
+  assert(result.length === 8, `Too short: ${ result }`);
+  assert(/^[ACDEFGHJKMNPQRTUVWXY2346789]+$/.test(result), `Invalid characters: ${ result }`);
+  assert(!/[A-Z]{3}/.test(result), `Too many sequential letters: ${ result }`);
+  assert(!/\d{5}/.test(result), `Too many sequential numbers: ${ result }`);
 }
 
 {
@@ -56,21 +56,21 @@ const afid = require('../dist/afid');
 {
   It`should allow customizing the length via options`;
   const result = afid({ length: 14 });
-  assert(result.length === 14, "Too short");
+  assert(result.length === 14, `Too short: length ${ result.length }`);
 }
 
 {
   It`should allow a prefix`;
   const result = afid({ prefix: 'CLIENT' });
   assert(result.length === 14, "Too short");
-  assert(/^CLIENT[ACDEFGHJKMNPQRTUVWXY2346789]+$/.test(result), "Invalid characters");
+  assert(/^CLIENT[ACDEFGHJKMNPQRTUVWXY2346789]+$/.test(result), `Invalid characters: ${ result.length }`);
 }
 
 {
   It`should allow a suffix`;
   const result = afid({ suffix: 'xyz' });
-  assert(result.length === 11, "Too short");
-  assert(/^[ACDEFGHJKMNPQRTUVWXY2346789]+xyz$/.test(result), "Invalid characters");
+  assert(result.length === 11, `Too short: length ${ result.length }`);
+  assert(/^[ACDEFGHJKMNPQRTUVWXY2346789]+xyz$/.test(result), `Invalid characters: ${ result }`);
 }
 
 {
@@ -125,7 +125,7 @@ const afid = require('../dist/afid');
   It`should segment`;
   const result = afid({ segments: 2 });
   assert(result.length === 9, "Wrong length");
-  assert(/^[ACDEFGHJKMNPQRTUVWXY2346789]{4}-[ACDEFGHJKMNPQRTUVWXY2346789]{4}$/.test(result), "Invalid characters or format");
+  assert(/^[ACDEFGHJKMNPQRTUVWXY2346789]{4}-[ACDEFGHJKMNPQRTUVWXY2346789]{4}$/.test(result), `Invalid characters or format: ${ result }`);
 }
 
 {
@@ -165,28 +165,41 @@ const afid = require('../dist/afid');
   It`should segment different lengths`;
   const result = afid({ segments: 4, length: 16 });
   assert(result.length === 19, "Wrong length");
-  assert(/^[ACDEFGHJKMNPQRTUVWXY2346789]{4}-[ACDEFGHJKMNPQRTUVWXY2346789]{4}-[ACDEFGHJKMNPQRTUVWXY2346789]{4}-[ACDEFGHJKMNPQRTUVWXY2346789]{4}$/.test(result), "Invalid characters or format");
+  assert(/^[ACDEFGHJKMNPQRTUVWXY2346789]{4}-[ACDEFGHJKMNPQRTUVWXY2346789]{4}-[ACDEFGHJKMNPQRTUVWXY2346789]{4}-[ACDEFGHJKMNPQRTUVWXY2346789]{4}$/.test(result), `Invalid characters or format: ${ result }`);
 }
 
 {
   It`should segment odd lengths`;
   const result = afid({ segments: 2, length: 7 });
   assert(result.length === 8, "Wrong length");
-  assert(/^[ACDEFGHJKMNPQRTUVWXY2346789]{4}-[ACDEFGHJKMNPQRTUVWXY2346789]{3}$/.test(result), "Invalid characters or format");
+  assert(/^[ACDEFGHJKMNPQRTUVWXY2346789]{4}-[ACDEFGHJKMNPQRTUVWXY2346789]{3}$/.test(result), `Invalid characters or format: ${ result }`);
 }
 
 {
   It`should allow a custom separator`;
   const result = afid({ segments: 2, separator: "__" });
   assert(result.length === 10, "Wrong length");
-  assert(/^[ACDEFGHJKMNPQRTUVWXY2346789]{4}__[ACDEFGHJKMNPQRTUVWXY2346789]{4}$/.test(result), "Invalid characters or format");
+  assert(/^[ACDEFGHJKMNPQRTUVWXY2346789]{4}__[ACDEFGHJKMNPQRTUVWXY2346789]{4}$/.test(result), `Invalid characters or format: ${ result }`);
 }
 
 {
   It`should not use the separator with prefixes and suffixes when segmenting`;
   const result = afid({ segments: 2, prefix: "ACME-", suffix: "-2023", separator: "_" });
   assert(result.length === 19, "Wrong length");
-  assert(/^ACME-[ACDEFGHJKMNPQRTUVWXY2346789]{4}_[ACDEFGHJKMNPQRTUVWXY2346789]{4}-2023$/.test(result), "Invalid characters or format");
+  assert(/^ACME-[ACDEFGHJKMNPQRTUVWXY2346789]{4}_[ACDEFGHJKMNPQRTUVWXY2346789]{4}-2023$/.test(result), `Invalid characters or format: ${ result }`);
+}
+
+{
+  It`should not use ambiguous characters`;
+  let result;
+  for (let i = 0; i < 10_000; i++) {
+    result = afid();
+    if (/[I10OZB]+/.test(result)) {
+      break;
+    }
+    result = null;
+  }
+  assert(!result, `Includes ambiguous characters: ${result}`);
 }
 
 {
