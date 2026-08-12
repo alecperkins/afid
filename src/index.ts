@@ -33,7 +33,7 @@ const OPTION_DEFAULTS: AfidOptions = {
  * @param options.start - ('random') Whether the identifier should start with a letter, number, or randomly either.
  * @param options.prefix - ('') A prefix to add to the identifier.
  * @param options.suffix - ('') A suffix to include to the identifier.
- * @param options.segments - (1) The number of groupings of characters, delimited by `options.separator` (excludes prefix/suffix).
+ * @param options.segments - (1) The number of groupings of characters, delimited by `options.separator` (excludes prefix/suffix). May not exceed `options.length`.
  * @param options.separator - ('-') The character to separate segments with (excludes prefix/suffix).
  * @param length_or_options - The length directly, for convenience.
  *
@@ -41,28 +41,32 @@ const OPTION_DEFAULTS: AfidOptions = {
  */
 function afid (length_or_options?: number | AfidOptions) {
 
-  let raw_options;
-  if (length_or_options !== undefined) {
-    if (typeof length_or_options === "number") {
-      raw_options = {
-        length: length_or_options
-      }
-    } else {
-      raw_options = length_or_options;
-    }
-  } else {
+  let raw_options: AfidOptions;
+  if (length_or_options === undefined) {
     raw_options = {};
+  } else if (typeof length_or_options === "number") {
+    raw_options = {
+      length: length_or_options
+    }
+  } else if (typeof length_or_options === "object" && length_or_options !== null) {
+    raw_options = length_or_options;
+  } else {
+    // Anything else would silently spread into an empty set of options.
+    throw new Error("afid() takes a length or an options object");
   }
   const _options = {
     ...OPTION_DEFAULTS,
     ...raw_options,
   };
 
-  if (!_options.length || typeof _options.length !== "number" || _options.length < 1) {
+  if (typeof _options.length !== "number" || !Number.isInteger(_options.length) || _options.length < 1) {
     throw new Error("options.length must be a positive, non-zero integer");
   }
-  if (!_options.segments || typeof _options.segments !== "number" || _options.segments < 1) {
+  if (typeof _options.segments !== "number" || !Number.isInteger(_options.segments) || _options.segments < 1) {
     throw new Error("options.segments must be a positive, non-zero integer");
+  }
+  if (_options.segments > _options.length) {
+    throw new Error("options.segments must not be greater than options.length");
   }
 
   let charsets: [string, string];

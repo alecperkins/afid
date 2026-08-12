@@ -26,24 +26,28 @@ const afid = require('../dist/afid');
     error = e;
   }
   assert(error, "Did not throw for 0");
+  error = undefined;
   try {
     afid(-10);
   } catch (e) {
     error = e;
   }
   assert(error, "Did not throw for negative");
+  error = undefined;
   try {
     afid('abc');
   } catch (e) {
     error = e;
   }
   assert(error, "Did not throw for letters");
+  error = undefined;
   try {
     afid(null);
   } catch (e) {
     error = e;
   }
   assert(error, "Did not throw for null");
+  error = undefined;
   try {
     afid(NaN);
   } catch (e) {
@@ -143,11 +147,11 @@ const afid = require('../dist/afid');
   It`should throw for negative segments`;
   let error;
   try {
-    afid({ segments: 0 });
+    afid({ segments: -3 });
   } catch (e) {
     error = e;
   }
-  assert(error, "Did not throw for 0");
+  assert(error, "Did not throw for negative");
 }
 
 {
@@ -346,6 +350,59 @@ const afid = require('../dist/afid');
   Math.random = realRandom;
 }
 
+{
+  It`should throw for more segments than characters`;
+  let error;
+  try {
+    afid({ segments: 5, length: 3 });
+  } catch (e) {
+    error = e;
+  }
+  assert(error, "Did not throw for segments greater than length");
+}
+
+{
+  It`should throw for non-integer length`;
+  let error;
+  try {
+    afid(2.5);
+  } catch (e) {
+    error = e;
+  }
+  assert(error, "Did not throw for fractional length");
+  error = undefined;
+  try {
+    afid({ length: 8.5 });
+  } catch (e) {
+    error = e;
+  }
+  assert(error, "Did not throw for fractional options.length");
+}
+
+{
+  It`should throw for infinite length`;
+  let error;
+  try {
+    afid({ length: Infinity });
+  } catch (e) {
+    error = e;
+  }
+  assert(
+    error && /integer/.test(error.message),
+    `Did not throw a validation error for Infinity: ${ error && error.message }`,
+  );
+}
+
+{
+  It`should throw for non-integer segments`;
+  let error;
+  try {
+    afid({ segments: 1.5 });
+  } catch (e) {
+    error = e;
+  }
+  assert(error, "Did not throw for fractional segments");
+}
 
 {
   It`should take a reasonable time to generate an identifier`;
