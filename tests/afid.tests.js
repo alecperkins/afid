@@ -351,6 +351,119 @@ const afid = require('../dist/afid');
 }
 
 {
+  It`should not generate identifiers that parse as numbers`;
+  let result;
+  for (let i = 0; i < 20_000; i++) {
+    result = afid(6);
+    if (!Number.isNaN(Number(result))) {
+      break;
+    }
+    result = null;
+  }
+  assert(!result, `Parses as a number: ${ result } -> ${ Number(result) }`);
+}
+
+{
+  It`should not generate segmented identifiers that parse as numbers`;
+  // A single separator can still be part of a number: '.' as the decimal
+  // point, '-' or '+' as the sign of an exponent. An empty separator leaves
+  // the characters running together, the same as an unsegmented id.
+  const cases = [
+    { segments: 2, separator: ".", length: 6 },
+    { segments: 2, separator: ".", length: 9 },
+    { segments: 2, separator: "-", length: 6 },
+    { segments: 2, separator: "+", length: 6 },
+    { segments: 2, separator: "", length: 6 },
+    { segments: 3, separator: "", length: 6 },
+  ];
+  for (const options of cases) {
+    let result;
+    for (let i = 0; i < 20_000; i++) {
+      result = afid(options);
+      if (!Number.isNaN(Number(result))) {
+        break;
+      }
+      result = null;
+    }
+    assert(!result, `Parses as a number: ${ result } -> ${ Number(result) } (${ JSON.stringify(options) })`);
+  }
+}
+
+{
+  It`should avoid exponential notation with an E in the second position`;
+  const realRandom = Math.random;
+  // A recorded sequence of "random" values that produced "6E9349".
+  // Falls back to real randomness if the fix consumes more values.
+  const nums = [
+    0.2509140331253267,
+    0.5561177795374205,
+    0.0876523070444103,
+    0.1686592935599326,
+    0.09743155803238479,
+    0.9193105513912873,
+    0.8505382733895904,
+    0.14811910269819273,
+    0.5288512088399576,
+    0.4281548033799547,
+    0.516472033600968,
+    0.9020646914279392,
+  ];
+  Math.random = () => nums.length > 0 ? nums.shift() : realRandom();
+  const result = afid(6);
+  Math.random = realRandom;
+  assert(Number.isNaN(Number(result)), `Parses as a number: ${ result }`);
+}
+
+{
+  It`should avoid exponential notation with an E in the next-to-last position`;
+  const realRandom = Math.random;
+  // A recorded sequence of "random" values that produced "4864E8".
+  // Falls back to real randomness if the fix consumes more values.
+  const nums = [
+    0.3447079585551176,
+    0.35706973393361185,
+    0.943621748489219,
+    0.7839879255241614,
+    0.7268707171141423,
+    0.5658089977218841,
+    0.695892882029431,
+    0.3741131412009747,
+    0.19530485389418983,
+    0.2033243599430029,
+    0.7800889919772408,
+    0.5048670109835471,
+  ];
+  Math.random = () => nums.length > 0 ? nums.shift() : realRandom();
+  const result = afid(6);
+  Math.random = realRandom;
+  assert(Number.isNaN(Number(result)), `Parses as a number: ${ result }`);
+}
+
+{
+  It`should produce the requested number of segments`;
+  const cases = [
+    [{ segments: 5, length: 8 }, 5],
+    [{ segments: 5, length: 12 }, 5],
+    [{ segments: 4, length: 6 }, 4],
+    [{ segments: 3, length: 8 }, 3],
+    [{ segments: 2, length: 7 }, 2],
+  ];
+  for (const [options, expected] of cases) {
+    const result = afid(options);
+    const parts = result.split("-");
+    assert(parts.length === expected, `Expected ${ expected } segments, got ${ parts.length }: ${ result }`);
+    assert(
+      result.replace(/-/g, "").length === options.length,
+      `Expected ${ options.length } characters, got ${ result.replace(/-/g, "").length }: ${ result }`,
+    );
+    assert(
+      parts.every(p => Math.abs(p.length - parts[0].length) <= 1),
+      `Segments differ by more than one character: ${ result }`,
+    );
+  }
+}
+
+{
   It`should throw for more segments than characters`;
   let error;
   try {

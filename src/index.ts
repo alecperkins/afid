@@ -93,73 +93,85 @@ function afid (length_or_options?: number | AfidOptions) {
   let num_es = 0;
   let num_letters = 0;
 
-  const segment_max_size = Math.ceil(_options.length / _options.segments);
+  // Distribute the characters as evenly as possible across the segments,
+  // with the remainder spread one character at a time over the leading ones.
+  const base_segment_size = Math.floor(_options.length / _options.segments);
+  const num_longer_segments = _options.length % _options.segments;
+  let segment_size = base_segment_size + (num_longer_segments > 0 ? 1 : 0);
+
+  // This only matters when the segments join into something that could still
+  // be read as a single number. A lone separator can be part of one: '.' as
+  // the decimal point, '-' or '+' as the sign of the exponent. Two or more
+  // separators cannot, unless they are empty and leave the characters running
+  // together like an unsegmented id.
+  const check_exponent = _options.segments < 3 || _options.separator === '';
 
   while (num_picked < _options.length) {
     const current_set = charsets[0];
     const next_char = pickRandomChar(current_set);
-    // Track how many Es and non-E letters have been used so we can ensure
-    // the output does not resemble exponential notation.
-    if (
-      (
-        // This only really matters for unsegmented ids.
-        _options.segments < 2
-        || (
-          _options.segments < 3
-          && _options.separator !== '.'
-        )
-      ) && current_set === LETTERS
-    ) {
-      num_letters += 1;
-      if (next_char === "E") {
-        num_es += 1;
-        if (num_es > 1) {
-          is_exponent_safe = true;
-        } else if (
-          num_letters < 2 // Only one E
-          && num_picked > 1 // Not the first
-          && num_picked < _options.length - 1 // Not the last
-        ) {
-          // If there is an E that is the only letter
-          // and isn't in the first or last position,
-          // consider the in-progress identifier as
-          // resembling an exponent.
-          is_exponent_safe = false;
-        }
-      } else if (!is_exponent_safe) {
-        is_exponent_safe = true;
-      }
-    }
 
     // No two of the same in a row
     if (next_char !== prev_picked) {
+      const char_position = num_picked;
       segment.push(next_char);
       prev_picked = next_char;
       num_picked += 1;
       num_from_set += 1;
 
-      if (
-        segment.length === segment_max_size
-        || num_picked === _options.length
-      ) {
+      if (segment.length === segment_size) {
         picked.push(segment.join(''));
         segment = [];
+        segment_size = base_segment_size + (picked.length < num_longer_segments ? 1 : 0);
       }
+
+      // Track how many Es and non-E letters have been used so we can ensure
+      // the output does not resemble exponential notation. Only characters
+      // that were kept count: a rejected duplicate never appears in the id.
+      if (check_exponent && current_set === LETTERS) {
+        num_letters += 1;
+        if (next_char === "E") {
+          num_es += 1;
+          if (num_es > 1) {
+            is_exponent_safe = true;
+          } else if (
+            num_letters < 2 // Only one letter, which is this E
+            && char_position > 0 // Not the first
+            && char_position < _options.length - 1 // Not the last
+          ) {
+            // If there is an E that is the only letter
+            // and isn't in the first or last position,
+            // consider the in-progress identifier as
+            // resembling an exponent.
+            is_exponent_safe = false;
+          }
+        } else if (!is_exponent_safe) {
+          is_exponent_safe = true;
+        }
+      }
+
+      // With only one character left and no second letter yet, that character
+      // has to be a letter, so never switch away from them at that point.
+      const must_stay_on_letters = !is_exponent_safe
+        && current_set === LETTERS
+        && num_picked === _options.length - 1;
 
       // No more than 2 letters in a row to avoid forming words,
       // no more than 4 numbers in a row for easier memorization or conveyance
       // (the letters punctuate the number groups).
       if (
-        (current_set === LETTERS && num_from_set === 2)
-        || (current_set === NUMBERS && num_from_set === 4)
-        || (
-          (
-            // If the ID is not yet exponent safe, increasingly favor letters.
-            !is_exponent_safe
-            && current_set === NUMBERS
-            && coinToss((num_picked + 1) / _options.length) // This will approach and reach 1 by the end, forcing a second letter by the end if not exponent safe yet.
+        !must_stay_on_letters
+        && (
+          (current_set === LETTERS && num_from_set === 2)
+          || (current_set === NUMBERS && num_from_set === 4)
+          || (
+            (
+              // If the ID is not yet exponent safe, increasingly favor letters.
+              !is_exponent_safe
+              && current_set === NUMBERS
+              && coinToss((num_picked + 1) / _options.length) // This will approach and reach 1 by the end, forcing a second letter by the end if not exponent safe yet.
+            )
+            || coinToss(0.25)
           )
-          || coinToss(0.25)
         )
        ) {
         num_from_set = 0;
